@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select desde archivo TXT</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        select {
+            padding: 5px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Cargar Opciones Automáticamente de un Archivo TXT</h1>
+
+    <!-- Select donde se cargarán las opciones -->
+    <select id="miSelect">
+        <option value="">Seleccione una opción</option>
+    </select>
+
+    <script>
+        // Función para cargar el archivo .txt automáticamente y poblar el select
+        async function cargarOpciones() {
+            try {
+                // Cargar el archivo .txt
+                const respuesta = await fetch('opciones.txt');
+
+                // Comprobar que la carga fue exitosa
+                if (!respuesta.ok) {
+                    throw new Error('No se pudo cargar el archivo.');
+                }
+
+                // Leer el contenido del archivo como texto
+                const contenido = await respuesta.text();
+
+                // Dividir el contenido por líneas
+                const lineas = contenido.split('\n');
+
+                // Obtener el select
+                const select = document.getElementById('miSelect');
+
+                // Agregar las opciones al select
+                lineas.forEach(linea => {
+                    const opcion = linea.trim(); // Eliminar espacios o saltos de línea
+                    if (opcion) {
+                        const nuevaOpcion = document.createElement('option');
+                        nuevaOpcion.value = opcion;
+                        nuevaOpcion.textContent = opcion;
+                        select.appendChild(nuevaOpcion);
+                    }
+                });
+            } catch (error) {
+                console.error('Error al cargar el archivo:', error);
+                alert('Hubo un problema al cargar las opciones.');
+            }
+        }
+
+        // Llamar a la función al cargar la página
+        cargarOpciones();
+    </script>
+</body>
+</html>
